@@ -1,42 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:instagram_clone/resources/auth_methods.dart';
-import 'package:instagram_clone/screens/home_screen.dart';
-import 'package:instagram_clone/screens/signup_screen.dart';
+import 'package:instagram_clone/screens/login_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/widgets/text_input_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailContoller = TextEditingController();
   final TextEditingController _passContoller = TextEditingController();
+  final TextEditingController _usernameContoller = TextEditingController();
+  final TextEditingController _bioContoller = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
     _emailContoller.dispose();
     _passContoller.dispose();
+    _usernameContoller.dispose();
+    _bioContoller.dispose();
   }
 
-  loginUser() {
-    String response = AuthMethods().loginUser(
-        /*password: _emailContoller.text, email: _emailContoller.text*/);
-    if (response.isEmpty) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()));
-    }
+  navigateToLoginScreen() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
-
-  // navigateToSignUpScreen() {
-  //   Navigator.of(context).push(
-  //       MaterialPageRoute(builder: (context) => const SignupScreen()));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +51,32 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 64,
               ),
+              Stack(
+                children: [
+                  const CircleAvatar(
+                    radius: 64,
+                    backgroundImage:
+                        NetworkImage("https://picsum.photos/id/237/200"),
+                  ),
+                  Positioned(
+                    bottom: -10,
+                    left: 80,
+                    child: IconButton(
+                        onPressed: () {}, icon: const Icon(Icons.add_a_photo)),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextInputField(
+                hintText: "Enter your user name.",
+                textInputType: TextInputType.text,
+                textEditingController: _usernameContoller,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
               TextInputField(
                 hintText: "Enter your email.",
                 textInputType: TextInputType.emailAddress,
@@ -74,11 +94,24 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 24,
               ),
+              TextInputField(
+                hintText: "Enter your bio.",
+                textInputType: TextInputType.text,
+                textEditingController: _bioContoller,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
               InkWell(
-                onTap: () => loginUser,
+                onTap: () {
+                  String response = AuthMethods().signUpUser(
+                      email: _emailContoller.text,
+                      password: _passContoller.text,
+                      userName: _usernameContoller.text,
+                      bio: _bioContoller.text);
+                },
                 child: Container(
-                  //color: Colors.amber,
-                  child: const Text("Log in"),
+                  child: const Text("Sign   up"),
                   width: double.infinity,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -100,18 +133,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    child: const Text("Don't you have a account?"),
+                    child: const Text("Do you have a account?"),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                   ),
                   GestureDetector(
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
+                        builder: (context) => const LoginScreen(),
                       ),
                     ),
                     child: Container(
                       child: const Text(
-                        "Signup",
+                        "Login",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 8),
